@@ -41,7 +41,9 @@ def initDataStructs():
 
 
 def main():
+    # initialise the state variables
     gameState, commandsState = initDataStructs()
+    
 
 
 
