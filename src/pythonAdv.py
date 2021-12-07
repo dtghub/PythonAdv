@@ -52,36 +52,36 @@ class lowLevelCommand():
     # //B100 - is the item in the players inventory
     # //B101 - are any items in the location number defined in gameState.classicActiveNumber
     def B(parsedValue, i, gameState, commandState):
+      clRooms = commandState["clRooms"]
       if (parsedValue < 100):
-        if (commandState[clRooms][clRooms.currentRoomIndex()][parsedValue] != 1):
-          return i += 1
+        if (commandState["clRooms"][clRooms.currentRoomIndex()][parsedValue] != 1):
+          return i + 1
       else:
-        if (parsedValue === 100 && clItems[gameState.classicItemID].location !== 0) {
-          return i += 1;
-        }
-        if (parsedValue === 101 && clItems.testForItemsAtLocation(gameState.classicActiveNumber)) {
-          return i += 1;
-        }
-      }
+        if ((parsedValue == 100) and (clItems[gameState.classicItemID].location != 0)):
+          return i + 1
+        else:
+          if ((parsedValue == 101) and (clItems.testForItemsAtLocation(gameState.classicActiveNumber))):
+            return i + 1
+        
       return i
     
-    //The "C" instruction is a Conditional test - if false then we skip the next instruction. - see related "B" and "S"
-    //In practice this means that a lot of the time the next instruction will be an 'X'
-    //At the moment this has only been implemented for the rooms table.
-    //classicParsedValue range of 1 to 99 is reserved for flags attached to the item objects
-    //C100 - is the item in the players inventory
-    //C101 - are any items in the location number defined in gameState.classicActiveNumber
-    classicCommands.C = function (classicParsedValue,i) {
+    # //The "C" instruction is a Conditional test - if false then we skip the next instruction. - see related "B" and "S"
+    # //In practice this means that a lot of the time the next instruction will be an 'X'
+    # //At the moment this has only been implemented for the rooms table.
+    # //classicParsedValue range of 1 to 99 is reserved for flags attached to the item objects
+    # //C100 - is the item in the players inventory
+    # //C101 - are any items in the location number defined in gameState.classicActiveNumber
+    def C(classicParsedValue,i, gameState, commandState) {
       if (classicParsedValue < 100) {
-        if (clRooms[clRooms.currentRoomIndex()][classicParsedValue] === 1) {
-          return i += 1;
+        if (clRooms[clRooms.currentRoomIndex()][classicParsedValue] == 1) {
+          return i + 1;
         }
       } else {
-        if (classicParsedValue === 100 && clItems[gameState.classicItemID].location === 0) {
-          return i += 1;
+        if (classicParsedValue == 100 && clItems[gameState.classicItemID].location == 0) {
+          return i + 1;
         }
-        if (classicParsedValue === 101 && !clItems.testForItemsAtLocation(gameState.classicActiveNumber)) {
-          return i += 1;
+        if (classicParsedValue == 101 && !clItems.testForItemsAtLocation(gameState.classicActiveNumber)) {
+          return i + 1;
         }
       }
       return i;
@@ -102,11 +102,11 @@ class lowLevelCommand():
     //location 0 is your own inventory
     //location -1 is the current location
     classicCommands.L = function (classicParsedValue,i) {
-      if (classicParsedValue === -1) {
+      if (classicParsedValue == -1) {
         classicParsedValue = clItems.currentRoomNumber();
       }
       clItems[gameState.classicItemID].location = classicParsedValue;
-      if (clItems[gameState.classicItemID].ID === 0) {
+      if (clItems[gameState.classicItemID].ID == 0) {
         clItems.setCurrentRoomNumber(classicParsedValue);
       }
       return i;
@@ -114,7 +114,7 @@ class lowLevelCommand():
     //The "N" instruction changes the active "number" to which subsequent incstructions refer
     //See the related "I" instruction
     classicCommands.N = function (classicParsedValue,i) {
-      if (classicParsedValue === -1) {
+      if (classicParsedValue == -1) {
         gameState.classicActiveNumber = clItems.currentRoomNumber();
       } else {
         gameState.classicActiveNumber = classicParsedValue;
@@ -125,7 +125,7 @@ class lowLevelCommand():
     //Probably the goal is to develop the interpreter to the point where P is never needed
     //P1 adds the names of items located at the location matching gameState.classicActiveNumber to the display queue.
     classicCommands.P = function (classicParsedValue,i) {
-      if (classicParsedValue === 1) {
+      if (classicParsedValue == 1) {
         clItems.printListOfItemsAtLocation(gameState.classicActiveNumber);
       }
       return i;
