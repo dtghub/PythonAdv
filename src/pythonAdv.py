@@ -53,6 +53,7 @@ class lowLevelCommand():
     # //B101 - are any items in the location number defined in gameState.classicActiveNumber
     def B(parsedValue, i, gameState, commandState):
       clRooms = commandState["clRooms"]
+      clItems = commandState["clItems"]
       if (parsedValue < 100):
         if (commandState["clRooms"][clRooms.currentRoomIndex()][parsedValue] != 1):
           return i + 1
@@ -71,7 +72,7 @@ class lowLevelCommand():
     # //classicParsedValue range of 1 to 99 is reserved for flags attached to the item objects
     # //C100 - is the item in the players inventory
     # //C101 - are any items in the location number defined in gameState.classicActiveNumber
-    def C(classicParsedValue,i, gameState, commandState) {
+    def C(classicParsedValue, i, gameState, commandState) {
       if (classicParsedValue < 100) {
         if (clRooms[clRooms.currentRoomIndex()][classicParsedValue] == 1) {
           return i + 1;
@@ -169,26 +170,26 @@ class lowLevelCommand():
 #   //The for loop then steps through the array, calling the function associated with each instruction e.g "D9999" will execute a function call within the for loop 'classicCommands.D(9999);'
 #   //See function classicSetupCommands() for the details of the low level commands.
 def processLowLevelInstruction(userInstruction):
-    llc = lowLevelCommand()
+  llc = lowLevelCommand()
 
-    parsedValue = 0
-    commandParts = []
-    commandPartsArrayLength = 0
+  parsedValue = 0
+  commandParts = []
+  commandPartsArrayLength = 0
 
-    # classicCommandParts = classicInstruction.match(/[A-Z][\-]?[0-9]+/g);
-    commandParts = re.split('/[A-Z][\-]?[0-9]+/g',  userInstruction)
+  # classicCommandParts = classicInstruction.match(/[A-Z][\-]?[0-9]+/g);
+  commandParts = re.split('/[A-Z][\-]?[0-9]+/g',  userInstruction)
 
-    commandPartsArrayLength = commandParts.length;
+  commandPartsArrayLength = commandParts.length;
 
-    for i in range(commandPartsArrayLength):
-        clValue = commandParts[i]
-        parsedValue = clValue[1:]
+  for i in range(commandPartsArrayLength):
+    clValue = commandParts[i]
+    parsedValue = clValue[1:]
 
-        commandToProcess = clValue[0] + "(" + parsedValue + ", " + str(i) + ", gameState, commandState)"
-        i = getattr(llc, commandToProcess)
+    commandToProcess = clValue[0] + "(" + parsedValue + ", " + str(i) + ", gameState, commandState)"
+    i = getattr(llc, commandToProcess)
 
-        i = classicCommands[clValue[0]](parsedValue,i)
-        #The function is able to manipulate the 'i' index - (skip next command = i++)
+    i = classicCommands[clValue[0]](parsedValue,i)
+    #The function is able to manipulate the 'i' index - (skip next command = i++)
     
     
 
